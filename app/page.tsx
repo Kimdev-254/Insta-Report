@@ -36,8 +36,8 @@ function BackgroundIcons() {
     { Icon: Settings, id: "gear", isGreen: false },
     { Icon: Wand2, id: "wand", isGreen: true },
     { Icon: File, id: "paper", isGreen: false },
-    { Icon: Sparkles, id: "snap", isGreen: true },
-    { Icon: FileText, id: "page", isGreen: false },
+    { Icon: Sparkles, id: "snap", isGreen: false },
+    { Icon: FileText, id: "page", isGreen: true },
     { Icon: Cpu, id: "cpu", isGreen: true },
     { Icon: Database, id: "database", isGreen: false },
     { Icon: Code, id: "code", isGreen: true },
@@ -419,7 +419,7 @@ export default function LandingPage() {
               Everything You Need for Perfect Reports
             </h2>
             <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto px-4">
-              Our AI-powered platform handles all the heavy lifting so you can focus on what matters most
+              USe our AI-Powered platform to do all the heavy lifting so you can focus on what matters most
             </p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
