@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label"
 import { FileText, ArrowLeft, Lock, Copy, CheckCircle, CreditCard, X, Info, Loader2, Phone } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { estimatePageCount } from "@/lib/utils"
 
 export default function PreviewPage() {
   const [showPaymentModal, setShowPaymentModal] = useState(false)
@@ -80,6 +81,7 @@ export default function PreviewPage() {
     setPhoneNumber("")
   }
 
+  // Simulate dynamic report content (replace with real data in production)
   const sampleReportData = {
     title: "INDUSTRIAL ATTACHMENT REPORT",
     subtitle: "A Report on Industrial Attachment at ABC Technology Solutions",
@@ -90,7 +92,6 @@ export default function PreviewPage() {
     university: "University of Nairobi",
     supervisor: "Dr. Jane Smith",
     date: "December 2024",
-
     introduction: `This report presents a comprehensive overview of my industrial attachment experience at ABC Technology Solutions, conducted from June 2024 to August 2024. The attachment was undertaken as a partial fulfillment of the requirements for the Bachelor of Computer Science degree program.
 
 During this period, I was exposed to real-world software development practices, project management methodologies, and professional work environments. The experience provided invaluable insights into the practical application of theoretical knowledge gained throughout my academic journey.
@@ -98,7 +99,6 @@ During this period, I was exposed to real-world software development practices, 
 ABC Technology Solutions is a leading software development company specializing in web applications, mobile development, and enterprise solutions. The company has been operational for over 8 years and serves clients across East Africa. Their commitment to innovation and quality made them an ideal choice for my industrial attachment.
 
 This report details my experiences, learning outcomes, challenges faced, and recommendations for future improvements. It serves as a reflection of the knowledge and skills acquired during the attachment period and demonstrates the practical relevance of my academic studies.`,
-
     objectives: `The primary objectives of this industrial attachment were carefully designed to align with my academic goals and career aspirations:
 
 **General Objective:**
@@ -119,7 +119,29 @@ To gain practical experience in software development and understand the professi
 6. **Problem-Solving Skills:** To develop analytical and problem-solving abilities through real-world project challenges.
 
 These objectives were designed to bridge the gap between theoretical knowledge and practical application, ensuring a comprehensive learning experience that would benefit my future career in technology.`,
+    literatureReview: `The concept of industrial attachment has been widely studied in academic literature as a
+    crucial component of experiential learning. According to Smith et al. (2020), industrial
+    attachments provide students with opportunities to apply theoretical knowledge in practical
+    settings...`,
   }
+
+  // Combine all sections for page count estimation
+  const fullReportText = [
+    sampleReportData.introduction,
+    sampleReportData.objectives,
+    sampleReportData.literatureReview,
+  ].join("\n\n")
+
+  const pageCount = estimatePageCount(fullReportText)
+
+  // Pricing tiers
+  const getPriceTier = (pages: number) => {
+    if (pages <= 10) return { price: 300, label: "1-10 pages" }
+    if (pages <= 20) return { price: 500, label: "11-20 pages" }
+    if (pages <= 30) return { price: 750, label: "21-30 pages" }
+    return { price: 999, label: "31-40 pages" }
+  }
+  const priceTier = getPriceTier(pageCount)
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -350,15 +372,7 @@ These objectives were designed to bridge the gap between theoretical knowledge a
                       </h2>
                       <div className="space-y-4">
                         <p className="text-gray-700 leading-relaxed text-justify">
-                          The concept of industrial attachment has been widely studied in academic literature as a
-                          crucial component of experiential learning. According to Smith et al. (2020), industrial
-                          attachments provide students with opportunities to apply theoretical knowledge in practical
-                          settings...
-                        </p>
-                        <p className="text-gray-700 leading-relaxed text-justify">
-                          Research conducted by Johnson and Williams (2019) emphasizes the importance of structured
-                          industrial attachment programs in bridging the gap between academic learning and professional
-                          practice...
+                          {sampleReportData.literatureReview}
                         </p>
                       </div>
                     </section>
@@ -391,7 +405,7 @@ These objectives were designed to bridge the gap between theoretical knowledge a
                           Get access to all sections including Literature Review, Weekly Logs, Skills Gained, and more.
                         </p>
                         <div className="space-y-2">
-                          <p className="text-2xl font-bold text-[#1CBF73]">KES 999</p>
+                          <p className="text-2xl font-bold text-[#1CBF73]">KES {priceTier.price}</p>
                           <p className="text-sm text-gray-500">Complete report • DOCX & PDF formats</p>
                         </div>
                         <Button
@@ -399,7 +413,7 @@ These objectives were designed to bridge the gap between theoretical knowledge a
                           className="w-full bg-[#1CBF73] hover:bg-[#16A663] text-white"
                         >
                           <CreditCard className="w-4 h-4 mr-2" />
-                          Unlock Full Report – KES 999
+                          Unlock Full Report – KES {priceTier.price}
                         </Button>
                       </CardContent>
                     </Card>
@@ -434,7 +448,7 @@ These objectives were designed to bridge the gap between theoretical knowledge a
                       <FileText className="w-8 h-8 text-[#1CBF73]" />
                     </div>
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-900">Your report is 28 pages</h3>
+                      <h3 className="text-lg font-semibold text-gray-900">Your report is {pageCount} pages</h3>
                       <p className="text-gray-600">Industrial Attachment Report - ABC Technology Solutions</p>
                     </div>
                   </div>
@@ -442,11 +456,11 @@ These objectives were designed to bridge the gap between theoretical knowledge a
                   {/* Dynamic Pricing */}
                   <div className="bg-[#1CBF73]/5 border border-[#1CBF73]/20 rounded-lg p-4">
                     <div className="flex justify-between items-center mb-3">
-                      <span className="font-medium text-gray-900">Report Cost (21-30 pages)</span>
-                      <span className="text-2xl font-bold text-[#1CBF73]">KES 750</span>
+                      <span className="font-medium text-gray-900">Report Cost ({priceTier.label})</span>
+                      <span className="text-2xl font-bold text-[#1CBF73]">KES {priceTier.price}</span>
                     </div>
                     <div className="text-sm text-gray-600">
-                      ✓ Complete 28-page report • ✓ DOCX & PDF formats • ✓ Professional formatting
+                      ✓ Complete {pageCount}-page report • ✓ DOCX & PDF formats • ✓ Professional formatting
                     </div>
                   </div>
 
@@ -477,7 +491,7 @@ These objectives were designed to bridge the gap between theoretical knowledge a
                   <div className="space-y-3">
                     <Label className="text-sm font-medium text-gray-700">Need to adjust page count? (Optional)</Label>
                     <select className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1CBF73] focus:border-[#1CBF73] text-sm">
-                      <option value="28">Keep auto-calculated (28 pages) - KES 750</option>
+                      <option value="28">Keep auto-calculated ({pageCount} pages) - KES {priceTier.price}</option>
                       <option value="20">Limit to 20 pages - KES 500</option>
                       <option value="30">Extend to 30 pages - KES 750</option>
                       <option value="35">Extend to 35 pages - KES 999</option>
@@ -532,7 +546,7 @@ These objectives were designed to bridge the gap between theoretical knowledge a
                       disabled={!phoneNumber || phoneNumber.length < 10}
                       className="flex-1 bg-[#1CBF73] hover:bg-[#16A663] text-white"
                     >
-                      Pay KES 750
+                      Pay KES {priceTier.price}
                     </Button>
                   </div>
                 </>
@@ -546,7 +560,7 @@ These objectives were designed to bridge the gap between theoretical knowledge a
                   <div>
                     <h3 className="font-semibold text-gray-900 mb-2">Sending Payment Request</h3>
                     <p className="text-sm text-gray-600">
-                      We're sending a payment request for <strong>KES 750</strong> to <strong>{phoneNumber}</strong>
+                      We're sending a payment request for <strong>KES {priceTier.price}</strong> to <strong>{phoneNumber}</strong>
                     </p>
                   </div>
                   <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
@@ -572,7 +586,7 @@ These objectives were designed to bridge the gap between theoretical knowledge a
                   <div className="bg-green-50 border border-green-200 rounded-lg p-4">
                     <p className="text-sm text-green-800">
                       <strong>Action Required:</strong> Please check your phone and enter your M-Pesa PIN to complete
-                      the payment of <strong>KES 750</strong> for your 28-page report.
+                      the payment of <strong>KES {priceTier.price}</strong> for your {pageCount}-page report.
                     </p>
                   </div>
                   <div className="flex items-center justify-center space-x-2 text-sm text-gray-500">
