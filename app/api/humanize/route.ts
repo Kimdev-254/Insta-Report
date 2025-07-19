@@ -3,8 +3,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import OpenAI from 'openai'
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! })
-
 const HUMANIZE_PROMPT = `
 You are an expert academic editor who rewrites text in a way that sounds like a real human wrote it, especially a university student. Your task is to rephrase the content below so it cannot be easily detected as AI-generated.
 
@@ -18,11 +16,19 @@ Guidelines:
 - Output only the rewritten text. No preamble, no explanation.
 
 Input text:
-`
+`;
 
 export async function POST(req: NextRequest) {
-  const { text } = await req.json()
-  if (!text) return NextResponse.json({ error: 'No text provided' }, { status: 400 })
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) {
+    return NextResponse.json({ error: 'OPENAI_API_KEY environment variable is missing.' }, { status: 500 });
+  }
+
+  const openai = new OpenAI({ apiKey });
+  const { text } = await req.json();
+  if (!text) {
+    return NextResponse.json({ error: 'No text provided' }, { status: 400 });
+  }
 
   const completion = await openai.chat.completions.create({
     model: 'gpt-4-turbo',
@@ -31,8 +37,8 @@ export async function POST(req: NextRequest) {
     ],
     max_tokens: 2000,
     temperature: 0.85,
-  })
+  });
 
-  const rewritten = completion.choices[0].message.content?.trim()
-  return NextResponse.json({ rewritten })
+  const rewritten = completion.choices[0].message.content?.trim();
+  return NextResponse.json({ rewritten });
 } 
