@@ -42,6 +42,7 @@ function BackgroundIcons() {
     { Icon: Database, id: "database", isGreen: false },
     { Icon: Code, id: "code", isGreen: true },
     { Icon: Layers, id: "layers", isGreen: false },
+    
   ]
 
   // Calculate positions for icons on concentric circles
