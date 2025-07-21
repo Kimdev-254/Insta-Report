@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { FileText, Download, Edit, Eye, Search, Plus, Calendar, Filter } from "lucide-react"
 import Link from "next/link"
 import { supabase } from "@/lib/supabase"
+import { fetchPayments } from '@/lib/supabase'
 
 export default function ReportsPage() {
   const [reports, setReports] = useState<any[]>([])
@@ -17,6 +18,9 @@ export default function ReportsPage() {
   const [searchTerm, setSearchTerm] = useState("")
   const [statusFilter, setStatusFilter] = useState("all")
   const [sortBy, setSortBy] = useState("newest")
+  const [payments, setPayments] = useState<any[]>([])
+  const [paymentsLoading, setPaymentsLoading] = useState(true)
+  const [paymentsError, setPaymentsError] = useState("")
 
   // TODO: Replace with actual user ID from auth context/session
   const userId = "mock-user-id" // Replace with real user ID
@@ -35,6 +39,18 @@ export default function ReportsPage() {
       setLoading(false)
     }
     fetchReports()
+  }, [userId])
+
+  useEffect(() => {
+    async function getPayments() {
+      setPaymentsLoading(true)
+      setPaymentsError("")
+      const { data, error } = await fetchPayments(userId)
+      if (error) setPaymentsError(error.message)
+      else setPayments(data || [])
+      setPaymentsLoading(false)
+    }
+    getPayments()
   }, [userId])
 
   const filteredReports = reports.filter((report) => {
@@ -254,6 +270,49 @@ export default function ReportsPage() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Payments Dashboard */}
+        <div className="mt-12">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">My Payments</h2>
+          {paymentsLoading ? (
+            <div className="text-gray-500">Loading payments...</div>
+          ) : paymentsError ? (
+            <div className="text-red-600">{paymentsError}</div>
+          ) : payments.length === 0 ? (
+            <div className="text-gray-600">No payments found.</div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="min-w-full bg-white border border-gray-200 rounded-lg">
+                <thead>
+                  <tr className="bg-gray-50">
+                    <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Amount</th>
+                    <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Method</th>
+                    <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Status</th>
+                    <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {payments.map((payment) => (
+                    <tr key={payment.id} className="border-t border-gray-100">
+                      <td className="px-4 py-2 text-gray-900">KES {payment.amount}</td>
+                      <td className="px-4 py-2 text-gray-700">{payment.payment_method}</td>
+                      <td className="px-4 py-2">
+                        <span className={
+                          payment.status === 'completed'
+                            ? 'bg-green-100 text-green-800 px-2 py-1 rounded text-xs'
+                            : 'bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs'
+                        }>
+                          {payment.status}
+                        </span>
+                      </td>
+                      <td className="px-4 py-2 text-gray-600">{new Date(payment.created_at).toLocaleDateString()}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   )

@@ -12,6 +12,7 @@ import { FileText, ArrowLeft, Lock, Copy, CheckCircle, CreditCard, X, Info, Load
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { estimatePageCount } from "@/lib/utils"
+import { insertReport, insertPayment } from '@/lib/supabase'
 
 export default function PreviewPage() {
   const [showPaymentModal, setShowPaymentModal] = useState(false)
@@ -123,6 +124,7 @@ These objectives were designed to bridge the gap between theoretical knowledge a
     crucial component of experiential learning. According to Smith et al. (2020), industrial
     attachments provide students with opportunities to apply theoretical knowledge in practical
     settings...`,
+    organization_name: "ABC Technology Solutions",
   }
 
   // Combine all sections for page count estimation
@@ -142,6 +144,36 @@ These objectives were designed to bridge the gap between theoretical knowledge a
     return { price: 999, label: "31-40 pages" }
   }
   const priceTier = getPriceTier(pageCount)
+
+  // Example: Call this after report generation is complete
+  async function handleInsertReport() {
+    // Replace with actual user and report data
+    const userId = 'mock-user-id';
+    const reportData = {
+      user_id: userId,
+      title: sampleReportData.title,
+      organization_name: sampleReportData.organization_name,
+      form_data: sampleReportData, // or your actual form data
+      status: 'draft',
+    };
+    const { data, error } = await insertReport(reportData);
+    // Handle success/error as needed
+  }
+
+  // Example: Call this after payment is confirmed
+  async function handleInsertPayment(reportId: string, amount: number) {
+    // Replace with actual user and payment data
+    const userId = 'mock-user-id';
+    const paymentData = {
+      user_id: userId,
+      report_id: reportId,
+      amount,
+      payment_method: 'mpesa',
+      status: 'completed',
+    };
+    const { data, error } = await insertPayment(paymentData);
+    // Handle success/error as needed
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
