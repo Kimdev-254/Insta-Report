@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -8,47 +8,40 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { FileText, Download, Edit, Eye, Search, Plus, Calendar, Filter } from "lucide-react"
 import Link from "next/link"
-
-const sampleReports = [
-  {
-    id: 1,
-    title: "Industrial Attachment Report - ABC Tech",
-    organization: "ABC Technology Solutions",
-    createdDate: "2024-01-15",
-    format: "DOCX & PDF",
-    status: "Completed",
-    pages: 25,
-  },
-  {
-    id: 2,
-    title: "Research Project Report - AI in Healthcare",
-    organization: "University Research Lab",
-    createdDate: "2024-01-10",
-    format: "PDF",
-    status: "Completed",
-    pages: 45,
-  },
-  {
-    id: 3,
-    title: "Internship Report - FinTech Solutions",
-    organization: "Digital Finance Corp",
-    createdDate: "2024-01-05",
-    format: "DOCX",
-    status: "Draft",
-    pages: 18,
-  },
-]
+import { supabase } from "@/lib/supabase"
 
 export default function ReportsPage() {
+  const [reports, setReports] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState("")
   const [searchTerm, setSearchTerm] = useState("")
   const [statusFilter, setStatusFilter] = useState("all")
   const [sortBy, setSortBy] = useState("newest")
 
-  const filteredReports = sampleReports.filter((report) => {
+  // TODO: Replace with actual user ID from auth context/session
+  const userId = "mock-user-id" // Replace with real user ID
+
+  useEffect(() => {
+    async function fetchReports() {
+      setLoading(true)
+      setError("")
+      const { data, error } = await supabase
+        .from("reports")
+        .select("*")
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false })
+      if (error) setError(error.message)
+      else setReports(data || [])
+      setLoading(false)
+    }
+    fetchReports()
+  }, [userId])
+
+  const filteredReports = reports.filter((report) => {
     const matchesSearch =
       report.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      report.organization.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesStatus = statusFilter === "all" || report.status.toLowerCase() === statusFilter.toLowerCase()
+      (report.organization_name || "").toLowerCase().includes(searchTerm.toLowerCase())
+    const matchesStatus = statusFilter === "all" || (report.status || "").toLowerCase() === statusFilter.toLowerCase()
     return matchesSearch && matchesStatus
   })
 
@@ -162,7 +155,7 @@ export default function ReportsPage() {
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <CardTitle className="text-lg text-gray-900 line-clamp-2 mb-1">{report.title}</CardTitle>
-                      <CardDescription className="text-sm text-gray-600">{report.organization}</CardDescription>
+                      <CardDescription className="text-sm text-gray-600">{report.organization_name}</CardDescription>
                     </div>
                     <Badge
                       className={
@@ -179,7 +172,7 @@ export default function ReportsPage() {
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div>
                       <span className="text-gray-600">Created:</span>
-                      <div className="font-medium">{new Date(report.createdDate).toLocaleDateString()}</div>
+                      <div className="font-medium">{new Date(report.created_at).toLocaleDateString()}</div>
                     </div>
                     <div>
                       <span className="text-gray-600">Format:</span>
@@ -237,24 +230,24 @@ export default function ReportsPage() {
           <CardContent className="p-6">
             <div className="grid md:grid-cols-4 gap-6 text-center">
               <div>
-                <div className="text-2xl font-bold text-[#1CBF73]">{sampleReports.length}</div>
+                <div className="text-2xl font-bold text-[#1CBF73]">{reports.length}</div>
                 <div className="text-sm text-gray-600">Total Reports</div>
               </div>
               <div>
                 <div className="text-2xl font-bold text-green-600">
-                  {sampleReports.filter((r) => r.status === "Completed").length}
+                  {reports.filter((r) => r.status === "Completed").length}
                 </div>
                 <div className="text-sm text-gray-600">Completed</div>
               </div>
               <div>
                 <div className="text-2xl font-bold text-yellow-600">
-                  {sampleReports.filter((r) => r.status === "Draft").length}
+                  {reports.filter((r) => r.status === "Draft").length}
                 </div>
                 <div className="text-sm text-gray-600">In Progress</div>
               </div>
               <div>
                 <div className="text-2xl font-bold text-gray-600">
-                  {sampleReports.reduce((sum, r) => sum + r.pages, 0)}
+                  {reports.reduce((sum, r) => sum + r.pages, 0)}
                 </div>
                 <div className="text-sm text-gray-600">Total Pages</div>
               </div>
