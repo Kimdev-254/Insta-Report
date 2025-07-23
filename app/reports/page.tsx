@@ -21,11 +21,24 @@ export default function ReportsPage() {
   const [payments, setPayments] = useState<any[]>([])
   const [paymentsLoading, setPaymentsLoading] = useState(true)
   const [paymentsError, setPaymentsError] = useState("")
-
-  // TODO: Replace with actual user ID from auth context/session
-  const userId = "mock-user-id" // Replace with real user ID
+  const [userId, setUserId] = useState<string | null>(null)
+  const [userLoading, setUserLoading] = useState(true)
+  const [userError, setUserError] = useState("")
 
   useEffect(() => {
+    async function fetchUser() {
+      setUserLoading(true)
+      setUserError("")
+      const { data, error } = await supabase.auth.getUser()
+      if (error) setUserError(error.message)
+      else setUserId(data?.user?.id || null)
+      setUserLoading(false)
+    }
+    fetchUser()
+  }, [])
+
+  useEffect(() => {
+    if (!userId) return
     async function fetchReports() {
       setLoading(true)
       setError("")
@@ -43,6 +56,7 @@ export default function ReportsPage() {
 
   useEffect(() => {
     async function getPayments() {
+      if (!userId || typeof userId !== 'string') return;
       setPaymentsLoading(true)
       setPaymentsError("")
       const { data, error } = await fetchPayments(userId)
@@ -52,6 +66,13 @@ export default function ReportsPage() {
     }
     getPayments()
   }, [userId])
+
+  if (userLoading) {
+    return <div className="min-h-screen flex items-center justify-center text-gray-500">Loading user...</div>
+  }
+  if (userError || !userId) {
+    return <div className="min-h-screen flex items-center justify-center text-red-600">Please log in to view your reports.</div>
+  }
 
   const filteredReports = reports.filter((report) => {
     const matchesSearch =
