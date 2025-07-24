@@ -10,19 +10,57 @@ export async function middleware(req: NextRequest) {
     data: { session },
   } = await supabase.auth.getSession()
 
+  // Protected routes that require authentication
+  const protectedRoutes = [
+    '/reports',
+    '/generate',
+    '/preview',
+    '/profile',
+    '/settings',
+    '/api/reports',
+    '/api/payments'
+  ]
+
+  // Public routes that don't require authentication
+  const publicRoutes = [
+    '/auth',
+    '/reset-password',
+    '/',
+    '/about',
+    '/contact'
+  ]
+
+  const isProtectedRoute = protectedRoutes.some(route => 
+    req.nextUrl.pathname.startsWith(route)
+  )
+  
+  const isPublicRoute = publicRoutes.some(route => 
+    req.nextUrl.pathname.startsWith(route)
+  )
+
   // If no session and trying to access protected routes
-  if (!session && (
-    req.nextUrl.pathname.startsWith('/reports') ||
-    req.nextUrl.pathname.startsWith('/generate') ||
-    req.nextUrl.pathname.startsWith('/preview')
-  )) {
-    return NextResponse.redirect(new URL('/auth', req.url))
+  if (!session && isProtectedRoute) {
+    // Store the original URL to redirect back after login
+    const redirectUrl = new URL('/auth', req.url)
+    redirectUrl.searchParams.set('redirectTo', req.nextUrl.pathname)
+    return NextResponse.redirect(redirectUrl)
   }
 
   // If session exists and trying to access auth page
-  if (session && req.nextUrl.pathname.startsWith('/auth')) {
+  if (session && isPublicRoute) {
     return NextResponse.redirect(new URL('/reports', req.url))
   }
 
-  return res
+  // Add security headers
+  const headers = new Headers(res.headers)
+  headers.set('X-Frame-Options', 'DENY')
+  headers.set('X-Content-Type-Options', 'nosniff')
+  headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
+  headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()')
+
+  return NextResponse.next({
+    request: {
+      headers: headers,
+    },
+  })
 }
