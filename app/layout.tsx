@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { ThemeProvider } from '@/components/theme-provider'
+import { ToastProvider } from '@/components/toast-provider'
 import "./globals.css"
 
 const inter = Inter({ subsets: ["latin"] })
@@ -23,6 +24,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <ThemeProvider>
           <ErrorBoundary>
+            <ToastProvider />
             {children}
           </ErrorBoundary>
         </ThemeProvider>
