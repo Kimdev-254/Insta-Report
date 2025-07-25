@@ -12,6 +12,8 @@ import { FileText, ArrowLeft, Lock, Copy, CheckCircle, CreditCard, X, Info, Load
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { estimatePageCount } from "@/lib/utils"
+'use client'
+
 import { insertReport, insertPayment } from '@/lib/supabase'
 
 export default function PreviewPage() {
