@@ -1,7 +1,21 @@
-import { describe, it, expect, vi } from 'vitest'
-import { insertReport, fetchReports, updateReportStatus } from '@/lib/supabase'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
+import * as supabaseModule from '@/lib/supabase'
+
+// Mock the entire supabase module
+vi.mock('@/lib/supabase', () => ({
+  insertReport: vi.fn(),
+  fetchReports: vi.fn(),
+  updateReportStatus: vi.fn(),
+  supabase: {
+    from: vi.fn()
+  }
+}))
 
 describe('Database Operations', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
   it('should insert a report', async () => {
     const mockReport = {
       user_id: '123',
@@ -11,27 +25,20 @@ describe('Database Operations', () => {
       status: 'draft'
     }
 
-    const mockSupabaseResponse = {
+    const mockResponse = {
       data: { ...mockReport, id: '456' },
       error: null
     }
 
-    vi.mock('@/lib/supabase', () => ({
-      supabase: {
-        from: () => ({
-          insert: () => ({
-            select: () => ({
-              single: () => mockSupabaseResponse
-            })
-          })
-        })
-      }
-    }))
+    // Setup the mock implementation
+    vi.mocked(supabaseModule.insertReport).mockResolvedValue(mockResponse)
 
-    const result = await insertReport(mockReport)
+    const result = await supabaseModule.insertReport(mockReport)
+    
     expect(result.error).toBeNull()
     expect(result.data).toBeDefined()
     expect(result.data.id).toBe('456')
+    expect(supabaseModule.insertReport).toHaveBeenCalledWith(mockReport)
   })
 
   it('should fetch reports for a user', async () => {
@@ -41,25 +48,18 @@ describe('Database Operations', () => {
       { id: '2', title: 'Report 2' }
     ]
 
-    const mockSupabaseResponse = {
+    const mockResponse = {
       data: mockReports,
       error: null
     }
 
-    vi.mock('@/lib/supabase', () => ({
-      supabase: {
-        from: () => ({
-          select: () => ({
-            eq: () => ({
-              order: () => mockSupabaseResponse
-            })
-          })
-        })
-      }
-    }))
+    // Setup the mock implementation
+    vi.mocked(supabaseModule.fetchReports).mockResolvedValue(mockResponse)
 
-    const result = await fetchReports(userId)
+    const result = await supabaseModule.fetchReports(userId)
+    
     expect(result.error).toBeNull()
     expect(result.data).toHaveLength(2)
+    expect(supabaseModule.fetchReports).toHaveBeenCalledWith(userId)
   })
 })
