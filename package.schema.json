@@ -1,0 +1,46 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Package",
+  "type": "object",
+  "required": ["name", "version"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The name of the package."
+    },
+    "version": {
+      "type": "string",
+      "description": "Version of the package using semantic versioning."
+    },
+    "private": {
+      "type": "boolean",
+      "description": "If true, the package is private and cannot be published."
+    },
+    "type": {
+      "type": "string",
+      "enum": ["module", "commonjs"],
+      "description": "The module system used by the package."
+    },
+    "scripts": {
+      "type": "object",
+      "description": "Scripts that can be run using npm run.",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "dependencies": {
+      "type": "object",
+      "description": "Package dependencies.",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "devDependencies": {
+      "type": "object",
+      "description": "Development dependencies.",
+      "additionalProperties": {
+        "type": "string"
+      }
+    }
+  }
+}
