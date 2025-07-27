@@ -1,16 +1,13 @@
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
-import { ClientLayout } from '@/components/client-layout'
-import { Header } from '@/components/header'
+import { Header } from "@/components/header"
 import "./globals.css"
 
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   title: "Insta_Report - AI-Powered Academic Report Generator",
-  description:
-    "Generate professional academic reports in seconds with AI. Perfect for students' industrial attachment reports, research projects, and more.",
-  generator: 'v0.dev'
+  description: "Generate professional academic reports in seconds with AI."
 }
 
 export default function RootLayout({
@@ -19,14 +16,10 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.className} antialiased min-h-screen`} suppressHydrationWarning>
-        <ClientLayout>
-          <Header />
-          <main className="flex-1">
-            {children}
-          </main>
-        </ClientLayout>
+    <html lang="en">
+      <body className={inter.className}>
+        <Header />
+        {children}
       </body>
     </html>
   )
