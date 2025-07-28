@@ -1,9 +1,10 @@
 "use client"
 
 import React from "react"
-
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
+import { Alert, AlertDescription } from "@/components/ui/alert"
+import { FileUp, Info } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -33,7 +34,7 @@ const steps = [
   { id: 4, title: "Document Structure", icon: FileCheck, description: "Report sections and components" },
   { id: 5, title: "Styling Preferences", icon: Palette, description: "Format and appearance settings" },
   { id: 6, title: "Content Inputs", icon: Edit, description: "Your experiences and insights" },
-  { id: 7, title: "Uploads", icon: Upload, description: "Supporting files and documents" },
+  { id: 7, title: "Additional Requirements", icon: Upload, description: "Required documents and supporting files" },
   { id: 8, title: "Summary", icon: CheckCircle, description: "Review and confirm details" },
 ]
 
@@ -95,6 +96,12 @@ export default function OnboardingPage() {
     challenges: "",
     recommendations: "",
     conclusion: "",
+
+    // Step 7: Additional Requirements
+    institutionLogo: null,
+    sampleFormat: null,
+    referenceFiles: [],
+    weeklyPhotos: [],
 
     // New fields for auto-generation options
     autoGenerateOrgStructure: false,
