@@ -31,8 +31,12 @@ export async function POST(request: Request) {
     // Validate file type
     const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']
     if (!allowedTypes.includes(file.type)) {
+      console.log('File type:', file.type); // Add this for debugging
       return NextResponse.json(
-        { error: 'Invalid file type. Allowed types: JPG, PNG, PDF, DOCX' },
+        { 
+          error: `Invalid file type: ${file.type}. Allowed types: JPG, PNG, PDF, DOCX`,
+          allowedTypes
+        },
         { status: 400 }
       )
     }
