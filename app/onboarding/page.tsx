@@ -2,9 +2,10 @@
 
 import React from "react"
 import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { FileUp, Info } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -13,7 +14,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch"
 import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
-import {
+import { FileUpload } from "@/components/ui/file-upload"
+import { uploadMultipleFiles } from "@/lib/upload"
+import { 
   FileText,
   User,
   Building,
@@ -24,8 +27,9 @@ import {
   CheckCircle,
   ArrowLeft,
   ArrowRight,
+  FileUp,
+  Info
 } from "lucide-react"
-import { useRouter } from "next/navigation"
 
 const steps = [
   { id: 1, title: "Basic Info", icon: User, description: "Personal and academic details" },
@@ -674,66 +678,60 @@ export default function OnboardingPage() {
           <div className="space-y-6">
             <div className="text-sm text-gray-600 mb-4">
               Upload any supporting files that will help generate a better report. All uploads are optional.
-            </div>
+            </div>    
 
             <div className="grid gap-6">
-              <Card className="border-dashed border-2 border-gray-300 hover:border-[#1CBF73] transition-colors">
-                <CardContent className="p-6 text-center">
-                  <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                  <h3 className="font-medium text-gray-900 mb-1">Institution Logo</h3>
-                  <p className="text-sm text-gray-600 mb-4">Upload your institution's logo (PNG, JPG)</p>
-                  <Button
-                    variant="outline"
-                    className="border-[#1CBF73] text-[#1CBF73] hover:bg-[#1CBF73]/5 bg-transparent"
-                  >
-                    Choose File
-                  </Button>
-                </CardContent>
-              </Card>
+              <FileUpload
+                id="institution-logo"
+                label="Institution Logo"
+                description="Upload your institution's logo (Optional)"
+                accept="image/jpeg,image/png"
+                maxSize={2}
+                onUpload={async (files) => {
+                  const urls = await uploadMultipleFiles(files, 'logos')
+                  updateFormData('institutionLogo', urls[0])
+                }}
+              />
 
-              <Card className="border-dashed border-2 border-gray-300 hover:border-[#1CBF73] transition-colors">
-                <CardContent className="p-6 text-center">
-                  <FileText className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                  <h3 className="font-medium text-gray-900 mb-1">Sample Format</h3>
-                  <p className="text-sm text-gray-600 mb-4">
-                    Upload a sample report format from your institution (DOCX, PDF)
-                  </p>
-                  <Button
-                    variant="outline"
-                    className="border-[#1CBF73] text-[#1CBF73] hover:bg-[#1CBF73]/5 bg-transparent"
-                  >
-                    Choose File
-                  </Button>
-                </CardContent>
-              </Card>
+              <FileUpload
+                id="sample-format"
+                label="Sample Format"
+                description="Upload a sample report format from your institution (Optional)"
+                accept="application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                maxSize={5}
+                onUpload={async (files) => {
+                  const urls = await uploadMultipleFiles(files, 'samples')
+                  updateFormData('sampleFormat', urls[0])
+                }}
+              />
 
-              <Card className="border-dashed border-2 border-gray-300 hover:border-[#1CBF73] transition-colors">
-                <CardContent className="p-6 text-center">
-                  <FileText className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                  <h3 className="font-medium text-gray-900 mb-1">Reference Files</h3>
-                  <p className="text-sm text-gray-600 mb-4">Upload any reference materials or documents</p>
-                  <Button
-                    variant="outline"
-                    className="border-[#1CBF73] text-[#1CBF73] hover:bg-[#1CBF73]/5 bg-transparent"
-                  >
-                    Choose Files
-                  </Button>
-                </CardContent>
-              </Card>
+              <FileUpload
+                id="reference-files"
+                label="Reference Files"
+                description="Upload any reference materials or documents (Optional)"
+                accept="application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                maxSize={10}
+                multiple
+                maxFiles={5}
+                onUpload={async (files) => {
+                  const urls = await uploadMultipleFiles(files, 'references')
+                  updateFormData('referenceFiles', urls)
+                }}
+              />
 
-              <Card className="border-dashed border-2 border-gray-300 hover:border-[#1CBF73] transition-colors">
-                <CardContent className="p-6 text-center">
-                  <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                  <h3 className="font-medium text-gray-900 mb-1">Weekly Log Photos</h3>
-                  <p className="text-sm text-gray-600 mb-4">Upload photos of your handwritten weekly logs (JPG, PNG)</p>
-                  <Button
-                    variant="outline"
-                    className="border-[#1CBF73] text-[#1CBF73] hover:bg-[#1CBF73]/5 bg-transparent"
-                  >
-                    Choose Files
-                  </Button>
-                </CardContent>
-              </Card>
+              <FileUpload
+                id="weekly-photos"
+                label="Weekly Log Photos"
+                description="Upload up to 10 photos of your handwritten weekly logs"
+                accept="image/jpeg,image/png"
+                maxSize={5}
+                multiple
+                maxFiles={10}
+                onUpload={async (files) => {
+                  const urls = await uploadMultipleFiles(files, 'weekly-logs')
+                  updateFormData('weeklyPhotos', urls)
+                }}
+              />
             </div>
           </div>
         )
