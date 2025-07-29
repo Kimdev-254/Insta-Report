@@ -5,6 +5,34 @@ import { NextResponse } from 'next/server'
 export const maxDuration = 300 // Set max duration to 5 minutes
 export const dynamic = 'force-dynamic'
 
+type ValidFileTypes = {
+  'image/jpeg': string[];
+  'image/png': string[];
+  'application/pdf': string[];
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document': string[];
+}
+
+// Helper function to validate file type and extension
+function isValidFileType(file: File) {
+  const validTypes: ValidFileTypes = {
+    'image/jpeg': ['.jpg', '.jpeg'],
+    'image/png': ['.png'],
+    'application/pdf': ['.pdf'],
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ['.docx']
+  }
+
+  // Check mime type
+  const fileType = file.type as keyof ValidFileTypes
+  if (!Object.keys(validTypes).includes(fileType)) {
+    return false
+  }
+
+  // Check file extension
+  const fileName = file.name.toLowerCase()
+  const fileExt = '.' + fileName.split('.').pop()
+  return validTypes[fileType].includes(fileExt)
+}
+
 export async function POST(request: Request) {
   try {
     const supabase = createRouteHandlerClient({ cookies })
@@ -29,52 +57,56 @@ export async function POST(request: Request) {
     }
 
     // Validate file type
-    const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']
-    if (!allowedTypes.includes(file.type)) {
-      console.log('File type:', file.type); // Add this for debugging
+    if (!isValidFileType(file)) {
       return NextResponse.json(
         { 
-          error: `Invalid file type: ${file.type}. Allowed types: JPG, PNG, PDF, DOCX`,
-          allowedTypes
+          error: 'Invalid file type. Allowed types: JPG, PNG, PDF, DOCX',
+          providedType: file.type,
+          fileName: file.name
         },
         { status: 400 }
       )
     }
 
-    // Generate unique filename
+    // Generate unique filename with sanitization
     const timestamp = Date.now()
-    const fileName = `${timestamp}-${file.name}`
+    const sanitizedName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_')
+    const fileName = `${timestamp}-${sanitizedName}`
 
     // Upload to Supabase Storage
-    const { data, error } = await supabase.storage
-      .from('attachments')
+    const { data, error: uploadError } = await supabase.storage
+      .from('insta-report-files')
       .upload(`${folder}/${fileName}`, file, {
         cacheControl: '3600',
         upsert: false
       })
 
-    if (error) {
-      console.error('Storage error:', error)
+    if (uploadError) {
+      console.error('Storage error:', uploadError)
       return NextResponse.json(
-        { error: 'Failed to upload file' },
+        { error: 'Failed to upload file', details: uploadError.message },
         { status: 500 }
       )
     }
 
     // Get public URL
     const { data: { publicUrl } } = supabase.storage
-      .from('attachments')
+      .from('insta-report-files')
       .getPublicUrl(`${folder}/${fileName}`)
 
     return NextResponse.json({
       url: publicUrl,
-      path: data.path
+      path: data.path,
+      fileName: fileName
     })
 
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Upload error:', error)
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { 
+        error: 'Internal server error', 
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
       { status: 500 }
     )
   }
