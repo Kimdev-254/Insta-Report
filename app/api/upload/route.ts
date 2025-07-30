@@ -21,23 +21,47 @@ function isValidFileType(file: File) {
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ['.docx']
   }
 
+  // Add debug logging
+  console.log('Validating file:', {
+    name: file.name,
+    type: file.type,
+    size: file.size
+  })
+
   // Check mime type
-  const fileType = file.type as keyof ValidFileTypes
+  const fileType = file.type
+  console.log('File type:', fileType)
+  console.log('Valid types:', Object.keys(validTypes))
+
   if (!Object.keys(validTypes).includes(fileType)) {
+    console.log('Invalid mime type:', fileType)
     return false
   }
 
   // Check file extension
   const fileName = file.name.toLowerCase()
   const fileExt = '.' + fileName.split('.').pop()
-  return validTypes[fileType].includes(fileExt)
+  console.log('File extension:', fileExt)
+  
+  const isValid = validTypes[fileType as keyof ValidFileTypes].includes(fileExt)
+  console.log('Is valid file:', isValid)
+  
+  return isValid
 }
 
 export async function POST(request: Request) {
   try {
-    const supabase = createRouteHandlerClient({ cookies })
     const formData = await request.formData()
     const file = formData.get('file') as File
+    
+    // Add request logging
+    console.log('Received file:', {
+      name: file?.name,
+      type: file?.type,
+      size: file?.size
+    })
+
+    const supabase = createRouteHandlerClient({ cookies })
     const folder = formData.get('folder') as string
 
     if (!file) {
