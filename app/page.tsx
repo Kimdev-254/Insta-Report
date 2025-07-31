@@ -1,3 +1,4 @@
+import { preloadAuth } from "@/lib/preload"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -22,6 +23,7 @@ import {
   Layers,
 } from "lucide-react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 
 // Background Icons Component
 function BackgroundIcons() {
@@ -335,7 +337,6 @@ function FooterBackgroundIcons() {
     </div>
   )
 }
-
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-white">
@@ -361,16 +362,24 @@ export default function LandingPage() {
               </Link>
             </nav>
             <div className="flex items-center space-x-3">
-              <Link href="/auth">
+              <Link 
+                href="/auth"
+                onMouseEnter={() => preloadAuth()}
+              >
                 <Button
                   variant="ghost"
-                  className="text-gray-600 hover:text-[#1CBF73] text-sm md:text-base px-3 md:px-4 py-1 md:py-2"
+                  className="text-gray-600 hover:text-[#1CBF73] text-sm md:text-base px-3 md:px-4 py-1 md:py-2 transition-colors duration-200"
                 >
-                  Sign In
+                                                                                                                                                                                                                                                                                                                                             Sign In
                 </Button>
               </Link>
-              <Link href="/auth">
-                <Button className="bg-[#1CBF73] hover:bg-[#16A663] text-white rounded-lg md:rounded-xl text-sm md:text-base px-3 md:px-4 py-1 md:py-2">
+              <Link 
+                href="/auth"
+                onMouseEnter={() => preloadAuth()}
+              >
+                <Button 
+                  className="bg-[#1CBF73] hover:bg-[#16A663] text-white rounded-lg md:rounded-xl text-sm md:text-base px-3 md:px-4 py-1 md:py-2 transition-all duration-200"
+                >
                   Get Started
                 </Button>
               </Link>
@@ -396,18 +405,20 @@ export default function LandingPage() {
             <Link href="/auth" className="w-full sm:w-auto">
               <Button
                 size="lg"
-                className="w-full bg-[#1CBF73] hover:bg-[#16A663] text-white px-8 py-4 text-lg font-medium"
+                className="w-full bg-[#1CBF73] hover:bg-[#16A663] text-white px-8 py-4 text-lg font-medium transition-colors duration-200"
               >
-                Get Started
+                Get Started Now
               </Button>
             </Link>
-            <Button
-              size="lg"
-              variant="outline"
-              className="w-full sm:w-auto border-[#1CBF73] text-[#1CBF73] hover:bg-[#1CBF73]/5 px-8 py-4 text-lg font-medium bg-transparent"
-            >
-              How it Works
-            </Button>
+            <Link href="#features" className="w-full sm:w-auto">
+              <Button
+                size="lg"
+                variant="outline"
+                className="w-full border-[#1CBF73] text-[#1CBF73] hover:bg-[#1CBF73]/5 px-8 py-4 text-lg font-medium bg-transparent transition-colors duration-200"
+              >
+                Learn More
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
