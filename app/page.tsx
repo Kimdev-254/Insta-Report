@@ -361,29 +361,12 @@ export default function LandingPage() {
                 Reviews
               </Link>
             </nav>
-            <div className="flex items-center space-x-3">
-              <Link 
-                href="/auth"
-                onMouseEnter={() => preloadAuth()}
-              >
-                <Button
-                  variant="ghost"
-                  className="text-gray-600 hover:text-[#1CBF73] text-sm md:text-base px-3 md:px-4 py-1 md:py-2 transition-colors duration-200"
-                >
-                                                                                                                                                                                                                                                                                                                                             Sign In
-                </Button>
-              </Link>
-              <Link 
-                href="/auth"
-                onMouseEnter={() => preloadAuth()}
-              >
-                <Button 
-                  className="bg-[#1CBF73] hover:bg-[#16A663] text-white rounded-lg md:rounded-xl text-sm md:text-base px-3 md:px-4 py-1 md:py-2 transition-all duration-200"
-                >
-                  Get Started
-                </Button>
-              </Link>
-            </div>
+            {/* AuthButtons placeholder */}
+            <Link href="/auth">
+              <Button className="bg-[#1CBF73] hover:bg-[#16A663] text-white px-6 py-2 rounded-lg font-medium">
+                Login / Register
+              </Button>
+            </Link>
           </div>
         </div>
       </header>
