@@ -376,7 +376,7 @@ export default function LandingPage() {
         <BackgroundIcons />
         <div className="container mx-auto max-w-4xl relative z-10">
           <Badge className="mb-6 md:mb-6 bg-[#1CBF73]/10 text-[#1CBF73] border-[#1CBF73]/20 text-sm px-4 py-1">
-            AI-Powered Report Generation
+            Quick Report Generation
           </Badge>
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 md:mb-6 leading-tight px-2">
             Generate a Full Report in <span className="text-[#1CBF73]">Seconds</span>
