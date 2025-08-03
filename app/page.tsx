@@ -378,6 +378,9 @@ export default function LandingPage() {
           <Badge className="mb-6 md:mb-6 bg-[#1CBF73]/10 text-[#1CBF73] border-[#1CBF73]/20 text-sm px-4 py-1">
             Quick Report Generation
           </Badge>
+          <Badge className="mb-6 md:mb-6 bg-[#1CBF73]/10 text-[#1CBF73] border-[#1CBF73]/20 text-sm px-4 py-1">
+            Zero AI Detection
+          </Badge>
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 md:mb-6 leading-tight px-2">
             Generate a Full Report in <span className="text-[#1CBF73]">Seconds</span>
           </h1>
