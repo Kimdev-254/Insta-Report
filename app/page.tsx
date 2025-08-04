@@ -381,8 +381,11 @@ export default function LandingPage() {
           <Badge className="mb-6 md:mb-6 bg-[#1CBF73]/10 text-[#1CBF73] border-[#1CBF73]/20 text-sm px-4 py-1">
             Zero AI Detection
           </Badge>
+          <Badge className="mb-6 md:mb-6 bg-[#1CBF73]/10 text-[#1CBF73] border-[#1CBF73]/20 text-sm px-4 py-1">
+            Structured Report
+          </Badge>
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 md:mb-6 leading-tight px-2">
-            Generate a Full Report in <span className="text-[#1CBF73]">Seconds</span>
+            Generate a Structured Report in <span className="text-[#1CBF73]">Fast</span>
           </h1>
           <p className="text-base sm:text-lg md:text-xl text-gray-600 mb-8 md:mb-8 max-w-2xl mx-auto px-2 leading-relaxed">
             AI-powered attachment and school report generator that creates professional academic reports instantly
