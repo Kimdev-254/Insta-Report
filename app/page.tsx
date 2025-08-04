@@ -375,10 +375,10 @@ export default function LandingPage() {
       <section className="relative pt-16 md:pt-32 pb-16 md:pb-20 px-4 text-center bg-gradient-to-b from-[#F5F6FA] to-white overflow-hidden">
         <BackgroundIcons />
         <div className="container mx-auto max-w-4xl relative z-10">
-          <Badge className="mb-6 md:mb-6 bg-[#1CBF73]/10 text-[#1CBF73] border-[#1CBF73]/20 text-sm px-4 py-1">
+          <Badge className="mb-6 md:mb-6 bg-[#1CBF73]/10 text-[#1CBF73] border-[#1CBF73]/20 text-sm px-4 py-1 mr-4">
             Quick Report Generation
           </Badge>
-          <Badge className="mb-6 md:mb-6 bg-[#1CBF73]/10 text-[#1CBF73] border-[#1CBF73]/20 text-sm px-4 py-1">
+          <Badge className="mb-6 md:mb-6 bg-[#1CBF73]/10 text-[#1CBF73] border-[#1CBF73]/20 text-sm px-4 py-1 mr-4">
             Zero AI Detection
           </Badge>
           <Badge className="mb-6 md:mb-6 bg-[#1CBF73]/10 text-[#1CBF73] border-[#1CBF73]/20 text-sm px-4 py-1">
