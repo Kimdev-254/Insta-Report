@@ -89,7 +89,7 @@ export default function ReportsPage() {
         <div className="bg-white/80 backdrop-blur-md border border-white/20 rounded-2xl shadow-lg px-6 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <Link href="/" className="flex items-center space-x-2">
+              <Link href="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
                 <div className="w-8 h-8 bg-[#1CBF73] rounded-lg flex items-center justify-center">
                   <FileText className="w-5 h-5 text-white" />
                 </div>
