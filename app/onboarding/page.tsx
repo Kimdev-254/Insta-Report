@@ -890,10 +890,12 @@ export default function OnboardingPage() {
         <div className="bg-white/80 backdrop-blur-md border border-white/20 rounded-xl md:rounded-2xl shadow-lg px-4 md:px-6 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <div className="w-6 h-6 md:w-8 md:h-8 bg-[#1CBF73] rounded-lg flex items-center justify-center">
-                <FileText className="w-3 h-3 md:w-5 md:h-5 text-white" />
-              </div>
-              <span className="text-lg md:text-xl font-bold text-gray-900">Insta_Report</span>
+              <Link href="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
+                <div className="w-6 h-6 md:w-8 md:h-8 bg-[#1CBF73] rounded-lg flex items-center justify-center">
+                  <FileText className="w-3 h-3 md:w-5 md:h-5 text-white" />
+                </div>
+                <span className="text-lg md:text-xl font-bold text-gray-900">Insta_Report</span>
+              </Link>
             </div>
             <Badge
               variant="outline"
