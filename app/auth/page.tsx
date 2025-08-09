@@ -37,6 +37,7 @@ export default function AuthPage() {
 
       if (error) throw error
 
+      toast.success('Successfully signed in!')
       router.push('/onboarding')
     } catch (error) {
       const authError = error as SupabaseError
@@ -79,6 +80,8 @@ export default function AuthPage() {
       })
 
       if (error) throw error
+      
+      toast.success('Successfully signed in with Google!')
     } catch (error) {
       toast.error((error as SupabaseAuthError).message || 'Failed to sign in with Google')
     }
@@ -94,6 +97,8 @@ export default function AuthPage() {
       })
 
       if (error) throw error
+      
+      toast.success('Successfully signed in with GitHub!')
     } catch (error) {
       toast.error((error as SupabaseAuthError).message || 'Failed to sign in with GitHub')
     }
