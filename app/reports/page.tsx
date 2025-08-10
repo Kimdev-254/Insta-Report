@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { PostgrestError } from '@supabase/supabase-js'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -14,7 +15,7 @@ import { fetchPayments } from '@/lib/supabase'
 export default function ReportsPage() {
   const [reports, setReports] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState("")
+  const [error, setError] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState("")
   const [statusFilter, setStatusFilter] = useState("all")
   const [sortBy, setSortBy] = useState("newest")
@@ -47,7 +48,7 @@ export default function ReportsPage() {
         .select("*")
         .eq("user_id", userId)
         .order("created_at", { ascending: false })
-      if (error) setError(error.message)
+      if (error) setError(error.message || "Failed to fetch reports")
       else setReports(data || [])
       setLoading(false)
     }
