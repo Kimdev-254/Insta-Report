@@ -398,7 +398,7 @@ export default function LandingPage() {
                 size="lg"
                 className="w-full bg-[#1CBF73] hover:bg-[#16A663] text-white px-8 py-4 text-lg font-medium transition-colors duration-200"
               >
-                Get Started Now
+                Generate now
               </Button>
             </Link>
             <Link href="#features" className="w-full sm:w-auto">
