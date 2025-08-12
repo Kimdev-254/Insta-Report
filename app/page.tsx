@@ -207,8 +207,8 @@ function FooterBackgroundIcons() {
     { Icon: Database, id: "database", isGreen: false },
     { Icon: Code, id: "code", isGreen: true },
     { Icon: Layers, id: "layers", isGreen: false },
-    { Icon: Shield, id: "shield", isGreen: true },
-    { Icon: Upload, id: "upload", isGreen: false },
+    { Icon: Shield, id: "shield", isGreen: false },
+    { Icon: Upload, id: "upload", isGreen: true },
     { Icon: Eye, id: "eye", isGreen: true },
     { Icon: Clock, id: "clock", isGreen: false },
   ]
